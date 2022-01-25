@@ -1,13 +1,8 @@
 pragma solidity ^0.5.0;
 
 contract Token {
-<<<<<<< HEAD
     string  public name = "Token";
     string  public symbol = "TKN";
-=======
-    string  public name = "Sap Token";
-    string  public symbol = "Sap";
->>>>>>> f8ee95b3b38984a35e9149f353aae89fbb9eec61
     uint256 public totalSupply = 1000000000000000000000000; // 1 million tokens
     uint8   public decimals = 18;
 

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { Component } from 'react'
 import Web3 from 'web3'
 import Token from '../abis/Token.json'
@@ -6,11 +5,6 @@ import EthSwap from '../abis/EthSwap.json'
 import Navbar from './Navbar'
 import Main from './Main'
 import './App.css'
-=======
-import React, { Component } from "react";
-import logo from "../logo.png";
-import "./App.css";
->>>>>>> f8ee95b3b38984a35e9149f353aae89fbb9eec61
 
 class App extends Component {
 
@@ -113,7 +107,6 @@ class App extends Component {
           <div className="row">
             <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '600px' }}>
               <div className="content mr-auto ml-auto">
-<<<<<<< HEAD
                 <a
                   
                   target="_blank"
@@ -123,9 +116,6 @@ class App extends Component {
 
                 {content}
 
-=======
-                <h1>Hello World</h1>
->>>>>>> f8ee95b3b38984a35e9149f353aae89fbb9eec61
               </div>
             </main>
           </div>
