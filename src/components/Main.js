@@ -1,64 +1,53 @@
-import React, { Component } from 'react'
-import BuyForm from './BuyForm'
-import SellForm from './SellForm'
+import React, { Component } from "react";
+import BuyForm from "./BuyForm";
+//import SellForm from "./SellForm";
 
 class Main extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+
     this.state = {
-      currentForm: 'buy'
-    }
+      currentForm: "buy",
+    };
   }
 
   render() {
-    let content
-    if(this.state.currentForm === 'buy') {
+    let content;
+    if (this.state.currentForm === "buy") {
       content = <BuyForm
-        ethBalance={this.props.ethBalance}
-        tokenBalance={this.props.tokenBalance}
-        buyTokens={this.props.buyTokens}
+      ethBalance = {this.props.ethBalance}
+      tokenBalance = {this.props.tokenBalance}
+      buyTokens = {this.props.buyTokens}
       />
     } else {
-      content = <SellForm
-        ethBalance={this.props.ethBalance}
-        tokenBalance={this.props.tokenBalance}
-        sellTokens={this.props.sellTokens}
-      />
+      content = "sell form";
     }
 
     return (
-      <div id="content" className="mt-3">
-
-        <div className="d-flex justify-content-between mb-3">
+      <div className="mt-5">
+        <div>
           <button
-              className="btn btn-light"
-              onClick={(event) => {
-                this.setState({ currentForm: 'buy' })
-              }}
-            >
+            onClick={(e) => {
+              return this.setState({ currentForm: "buy" });
+            }}
+          >
             Buy
           </button>
-          <span className="text-muted">&lt; &nbsp; &gt;</span>
+
           <button
-              className="btn btn-light"
-              onClick={(event) => {
-                this.setState({ currentForm: 'sell' })
-              }}
-            >
+            onClick={(e) => {
+              return this.setState({ currentForm: "sell" });
+            }}
+          >
             Sell
           </button>
         </div>
 
-        <div className="card mb-4" >
-
-          <div className="card-body">
-
+        <div>
+          <div>
             {content}
-
           </div>
-
         </div>
-
       </div>
     );
   }
