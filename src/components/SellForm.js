@@ -1,68 +1,76 @@
-import React, { Component } from "react";
-import tokenLogo from "../token-logo.png";
-import ethLogo from "../eth-logo.png";
+import React, { Component } from 'react'
+import tokenLogo from '../token-logo.png'
+import ethLogo from '../eth-logo.png'
 
 class SellForm extends Component {
   constructor(props) {
-    super(props);
-
+    super(props)
     this.state = {
-      output: "0",
-    };
+      output: '0'
+    }
   }
 
   render() {
     return (
-      <form
-        action=""
-        onSubmit={(e) => {
-          e.preventDefault();
-          let tokenAmount;
-          tokenAmount = this.input.value.toString();
-          tokenAmount = window.web3.utils.toWei(tokenAmount, "ether");
-          this.props.sellTokens(tokenAmount);
-        }}
-      >
+      <form className="mb-3" onSubmit={(event) => {
+          event.preventDefault()
+          let etherAmount
+          etherAmount = this.input.value.toString()
+          etherAmount = window.web3.utils.toWei(etherAmount, 'Ether')
+          this.props.sellTokens(etherAmount)
+        }}>
         <div>
-          <label htmlFor="">Input</label>
-          <br />
-          <span>
-            Balance:
-            {window.web3.utils.fromWei(this.props.tokenBalance, "ether")}
+          <label className="float-left"><b>Input</b></label>
+          <span className="float-right text-muted">
+            Balance: {window.web3.utils.fromWei(this.props.tokenBalance, 'Ether')}
           </span>
         </div>
-
-        <div>
+        <div className="input-group mb-4">
           <input
             type="text"
-            ref={(input) => (this.input = input)}
-            onChange={(e) => {
-              const tokenAmount = this.input.value;
-              this.setState({ output: (tokenAmount / 100).toString() });
+            onChange={(event) => {
+              const tokenAmount = this.input.value.toString()
+              this.setState({
+                output: tokenAmount / 100
+              })
             }}
-            required
-          />
-        </div>
-
-        <div>
-          <div>
-            <img src={tokenLogo} alt="" />
+            ref={(input) => { this.input = input }}
+            className="form-control form-control-lg"
+            placeholder="0"
+            required />
+          <div className="input-group-append">
+            <div className="input-group-text">
+              <img src={tokenLogo} height='32' alt=""/>
+              &nbsp; DApp
+            </div>
           </div>
         </div>
-
         <div>
-          <label htmlFor="">Output</label>
-          <br />
-          <span>
-            Balance: {window.web3.utils.fromWei(this.props.ethBalance, "ether")}
+          <label className="float-left"><b>Output</b></label>
+          <span className="float-right text-muted">
+            Balance: {window.web3.utils.fromWei(this.props.ethBalance, 'Ether')}
           </span>
         </div>
-        <div>
-          <input type="text" value={this.state.output} disabled />
+        <div className="input-group mb-2">
+          <input
+            type="text"
+            className="form-control form-control-lg"
+            placeholder="0"
+            value={this.state.output}
+            disabled
+          />
+          <div className="input-group-append">
+            <div className="input-group-text">
+              <img src={ethLogo} height='32' alt=""/>
+              &nbsp;&nbsp;&nbsp; ETH
+            </div>
+          </div>
         </div>
-        <img src={ethLogo} alt="" />
-
-        <button type='submit'>Exchange</button>
+        <div className="mb-5">
+          <span className="float-left text-muted">Exchange Rate</span>
+          <span className="float-right text-muted">100 DApp = 1 ETH</span>
+        </div>
+        <button type="submit" className="btn btn-primary btn-block btn-lg">SWAP!</button>
       </form>
     );
   }
