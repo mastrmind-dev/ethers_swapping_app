@@ -38,7 +38,7 @@ contract EthSwap {
         emit TokenPurchased(msg.sender, address(token), tokenAmount, rate);
     }
 
-    function sellTokens(uint256 _amount) public {
+    function sellTokens(uint256 _amount) public payable {
         require(token.balanceOf(msg.sender) >= _amount);
         uint256 etherAmount = _amount / rate;
 

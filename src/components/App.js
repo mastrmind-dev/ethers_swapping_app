@@ -36,8 +36,13 @@ class App extends Component {
     //load EthSwap
     const ethSwapData = EthSwap.networks[networkId];
     if (ethSwapData) {
-      const ethSwap = new web3.eth.Contract(EthSwap.abi, ethSwapData.address);
+      this.setState({ ethSwapAddress: ethSwapData.address });
+      const ethSwap = new web3.eth.Contract(
+        EthSwap.abi,
+        this.state.ethSwapAddress
+      );
       this.setState({ ethSwap });
+      console.log("ethSwap_address => " + this.state.ethSwapAddress);
     } else {
       alert("Smar-contract is not deployed to detected network!");
     }
@@ -47,7 +52,8 @@ class App extends Component {
   async loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
+
+      await window.ethereum.request({ method: "eth_requestAccounts" });
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
@@ -57,27 +63,27 @@ class App extends Component {
     }
   }
 
-  buyTokens = (etherAmount) => {
+  buyTokens = async (etherAmount) => {
     this.setState({ loading: true });
-    this.state.ethSwap.methods.buyTokens().send({
+    await this.state.ethSwap.methods.buyTokens().send({
       value: etherAmount,
       from: this.state.account,
     });
     this.setState({ loading: false });
   };
 
-  sellTokens = (tokenAmount) => {
+  sellTokens = async (tokenAmount) => {
     this.setState({ loading: true });
-    this.state.token.methods
-      .approve(this.state.ethSwap.address, tokenAmount)
+
+    console.log("ethSwap_address => " + this.state.ethSwapAddress);
+    await this.state.token.methods
+      .approve(this.state.ethSwapAddress, tokenAmount)
       .send({
         from: this.state.account,
-      })
-      .on("confirmation", () => {
-        this.state.ethSwap.methods
-          .sellTokens(tokenAmount)
-          .send({ from: this.state.account });
       });
+    await this.state.ethSwap.methods
+      .sellTokens(tokenAmount)
+      .send({ from: this.state.account });
     this.setState({ loading: false });
   };
 
@@ -85,12 +91,13 @@ class App extends Component {
     super();
 
     this.state = {
-      account: '',
+      account: "",
       token: {},
       ethSwap: {},
-      ethBalance: '0',
-      tokenBalance: '0',
-      loading: true
+      ethSwapAddress: "0x1c3958659803bDc673e80F5c16339aCC8eB691C8",
+      ethBalance: "0",
+      tokenBalance: "0",
+      loading: true,
     };
   }
 

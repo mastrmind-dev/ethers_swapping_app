@@ -59,17 +59,17 @@ class App extends Component {
     }
   }
 
-  buyTokens = (etherAmount) => {
+  buyTokens = async (etherAmount) => {
     this.setState({ loading: true })
-    this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash) => {
+    await this.state.ethSwap.methods.buyTokens().send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash) => {
       this.setState({ loading: false })
     })
   }
 
-  sellTokens = (tokenAmount) => {
+  sellTokens = async (tokenAmount) => {
     this.setState({ loading: true })
-    this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: this.state.account }).on('transactionHash', (hash) => {
-      this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account }).on('transactionHash', (hash) => {
+    await this.state.token.methods.approve(this.state.ethSwap.address, tokenAmount).send({ from: this.state.account }).on('transactionHash', (hash) => {
+      await this.state.ethSwap.methods.sellTokens(tokenAmount).send({ from: this.state.account }).on('transactionHash', (hash) => {
         this.setState({ loading: false })
       })
     })
