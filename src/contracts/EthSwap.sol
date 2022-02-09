@@ -1,11 +1,11 @@
 pragma solidity ^0.5.0;
-
+    
 import "./Token.sol";
 
 contract EthSwap {
     string public name = "EthSwap Instant Exchange";
     Token public token;
-    uint256 public rate = 100;
+    uint256 public rate = 508722;
 
     event TokenPurchased(
         address account,
@@ -38,7 +38,7 @@ contract EthSwap {
         emit TokenPurchased(msg.sender, address(token), tokenAmount, rate);
     }
 
-    function sellTokens(uint256 _amount) public payable {
+    function sellTokens(uint256 _amount) public {
         require(token.balanceOf(msg.sender) >= _amount);
         uint256 etherAmount = _amount / rate;
 

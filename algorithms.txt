@@ -1,0 +1,22 @@
+PAYMENT GATEWAY
+
+user story
+
+1. Customer goes to the product page.
+2. He can see the price of the product.
+3. There is a pay button.
+4. Customer clicks on it and he will be redirected to payment gateway page.
+5. Customer can see how much he gonna pay.
+6. Customer wants to confirm payment.
+7. Payment is happening.
+8. Customer will recieve a payment receipt as an email.
+9. Seller will recieve a notification to his notification box.
+
+Algorithm
+
+1. Customer clicks the button and payment amount will send to the gateway in the url.
+2. From the url payment amount is extracted and send to the smart contract thorugh the frontend.
+3. In smart contract "payItem" function get the amount as an argument.
+4. Reciever is set as a fixed address for now. (Later it will be the sellers address which comes from the database)
+5. transferFrom function will do the work.
+6. If buyer will not recieve a message to confirm I will put a confirm message.
