@@ -19,6 +19,7 @@ class SellForm extends Component {
           etherAmount = window.web3.utils.toWei(etherAmount, 'Ether')
           this.props.sellTokens(etherAmount)
         }}>
+          {/* ====================================first input bar==================================== */}
         <div>
           <label className="float-left"><b>Input</b></label>
           <span className="float-right text-muted">
@@ -31,7 +32,7 @@ class SellForm extends Component {
             onChange={(event) => {
               const tokenAmount = this.input.value.toString()
               this.setState({
-                output: tokenAmount / 100
+                output: tokenAmount / this.props.rate
               })
             }}
             ref={(input) => { this.input = input }}
@@ -41,11 +42,13 @@ class SellForm extends Component {
           <div className="input-group-append">
             <div className="input-group-text">
               <img src={tokenLogo} height='32' alt=""/>
-              &nbsp; DApp
+              &nbsp; LKRT
             </div>
           </div>
         </div>
         <div>
+
+          {/* =================================second input bar============================ */}
           <label className="float-left"><b>Output</b></label>
           <span className="float-right text-muted">
             Balance: {window.web3.utils.fromWei(this.props.ethBalance, 'Ether')}
@@ -66,11 +69,13 @@ class SellForm extends Component {
             </div>
           </div>
         </div>
+        {/* ===================================exchange rate====================================== */}
         <div className="mb-5">
           <span className="float-left text-muted">Exchange Rate</span>
-          <span className="float-right text-muted">100 DApp = 1 ETH</span>
+          <span className="float-right text-muted">{this.props.rate} LKRT = 1 ETH</span>
         </div>
-        <button type="submit" className="btn btn-primary btn-block btn-lg">SWAP!</button>
+        {/* =====================================submit button======================================== */}
+        <button type="submit" className="btn btn-primary btn-block btn-lg">EXCHANGE</button>
       </form>
     );
   }

@@ -5,7 +5,6 @@ import "./Token.sol";
 contract EthSwap {
     string public name = "EthSwap Instant Exchange";
     Token public token;
-    uint256 public rate = 508722;
 
     event TokenPurchased(
         address account,
@@ -25,8 +24,8 @@ contract EthSwap {
         token = _token;
     }
 
-    function buyTokens() public payable {
-        uint256 tokenAmount = msg.value * rate;
+    function buyTokens(uint _rate) public payable {
+        uint256 tokenAmount = msg.value * _rate;
 
         require(
             token.balanceOf(address(this)) >= tokenAmount,
@@ -35,18 +34,18 @@ contract EthSwap {
 
         token.transfer(msg.sender, tokenAmount);
 
-        emit TokenPurchased(msg.sender, address(token), tokenAmount, rate);
+        emit TokenPurchased(msg.sender, address(token), tokenAmount, _rate);
     }
 
-    function sellTokens(uint256 _amount) public {
+    function sellTokens(uint256 _amount, uint _rate) public {
         require(token.balanceOf(msg.sender) >= _amount);
-        uint256 etherAmount = _amount / rate;
+        uint256 etherAmount = _amount / _rate;
 
         require(address(this).balance >= etherAmount, 'no enough ethers');
 
         token.transferFrom(msg.sender, address(this), _amount);
         msg.sender.transfer(etherAmount);
 
-        emit TokenSold(msg.sender, address(token), _amount, rate);
+        emit TokenSold(msg.sender, address(token), _amount, _rate);
     }
 }

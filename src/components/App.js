@@ -5,16 +5,14 @@ import EthSwap from "../abis/EthSwap.json";
 import Navbar from "./Navbar";
 import Main from "./Main";
 import "./App.css";
+import Footer from './Footer'
 import axios from "axios";
 
 class App extends Component {
   async componentWillMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
-  }
-
-  componentDidMount() {
-    this.getCryptoData();
+    await this.getCryptoData(); 
   }
 
   async getCryptoData() {
@@ -23,14 +21,15 @@ class App extends Component {
         "https://api.nomics.com/v1/currencies/ticker?key=b71f7354281cfffaf792da74e28b1a61ae441231&ids=BTC,ETH,XRP&interval=1d,30d&convert=LKR&platform-currency=ETH&per-page=100&page=1"
       )
       .then((response) => {
+        this.data = response.data[0];
         console.log(
           "1 Eth = " +
-            response.data[0].price +
+            this.data.price +
             " LKR => timestamp = " +
-            response.data[0].price_timestamp
+            this.data.price_timestamp
         );
-        this.setState({ ethToLkr: response.data[0].price });
       });
+    this.setState({ rate: Math.round(this.data.price) });
   }
 
   async loadBlockchainData() {
@@ -86,20 +85,44 @@ class App extends Component {
 
   buyTokens = async (etherAmount) => {
     this.setState({ loading: true });
+    // let intTotalFee = (parseInt(etherAmount) + (parseInt(etherAmount) / 100));
+    // console.log('intTotalFee = ' + intTotalFee);
+    // let totalFee = await window.web3.utils.toBN(intTotalFee);
+    // console.log('totalFee = ', totalFee);
     await this.state.ethSwap.methods
-      .buyTokens(this.state.ethToLkr)
-      .send({ value: etherAmount, from: this.state.account });
+      .buyTokens(this.state.rate)
+      .send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash)=>{
+        window.alert("Your transaction was done successfully. Check your wallet to confirm you have received corresponded amount of LKRT that you requested.");
+        window.location.reload();
+      }).on('error', (error)=>{
+        console.log('error recognized');
+        window.alert('You rejected the transaction');
+        window.location.reload();
+      });
     this.setState({ loading: false });
   };
 
   sellTokens = async (tokenAmount) => {
     this.setState({ loading: true });
+    let totalFee = tokenAmount;
     await this.state.token.methods
-      .approve(window.ethSwapData.address, tokenAmount)
-      .send({ from: this.state.account });
+      .approve(window.ethSwapData.address, totalFee)
+      .send({ from: this.state.account }).on("error", (error)=>{
+        console.log('user rejected giving permission')
+        window.alert('You rejected giving permssion to send LKRT.')
+        window.location.reload();
+      });
     await this.state.ethSwap.methods
-      .sellTokens(tokenAmount, this.state.ethToLkr)
-      .send({ from: this.state.account });
+      .sellTokens(totalFee, this.state.rate)
+      .send({ from: this.state.account }).on('transactionHash', (hash)=>{
+        console.log('transaction hash = ', hash);
+        console.log(hash);
+        window.location.reload();
+      }).on('error', (error)=>{
+        console.log('user rejected the transaction');
+        window.alert('You rejected the transaction.')
+        window.location.reload();
+      });
     this.setState({ loading: false });
   };
 
@@ -112,7 +135,7 @@ class App extends Component {
       ethBalance: "0",
       tokenBalance: "0",
       loading: true,
-      ethToLkr: "0.00",
+      rate: 0,
     };
   }
 
@@ -120,7 +143,7 @@ class App extends Component {
     let content;
     if (this.state.loading) {
       content = (
-        <p id="loader" className="text-center">
+        <p id="loader" className="text-center" style={{ height: "68vh" }}>
           Loading...
         </p>
       );
@@ -131,6 +154,7 @@ class App extends Component {
           tokenBalance={this.state.tokenBalance}
           buyTokens={this.buyTokens}
           sellTokens={this.sellTokens}
+          rate={this.state.rate}
         />
       );
     }
@@ -153,6 +177,7 @@ class App extends Component {
             </main>
           </div>
         </div>
+        <Footer/>
       </div>
     );
   }
