@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import tokenLogo from "../token-logo.png";
-import ethLogo from "../eth-logo.png";
+import React, { Component } from 'react'
+import tokenLogo from '../token-logo.png'
+import ethLogo from '../eth-logo.png'
 
 class BuyForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      output: "0",
-    };
+      output: '0'
+    }
   }
 
   render() {

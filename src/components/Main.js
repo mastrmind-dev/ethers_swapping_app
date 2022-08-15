@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import BuyForm from "./BuyForm";
-import SellForm from "./SellForm";
+import React, { Component } from 'react'
+import BuyForm from './BuyForm'
+import SellForm from './SellForm'
 
 class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentForm: "buy",
-    };
+      currentForm: 'buy'
+    }
   }
 
   render() {
@@ -57,6 +57,7 @@ class Main extends Component {
         <div className="card mb-4">
           <div className="card-body">{content}</div>
         </div>
+
       </div>
     );
   }

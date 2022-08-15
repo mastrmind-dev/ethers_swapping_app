@@ -4,11 +4,11 @@ import Token from "../abis/Token.json";
 import EthSwap from "../abis/EthSwap.json";
 import Navbar from "./Navbar";
 import Main from "./Main";
-import "./App.css";
 import Footer from './Footer'
 import axios from "axios";
 
 class App extends Component {
+
   async componentWillMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
@@ -45,12 +45,10 @@ class App extends Component {
     const networkId = await web3.eth.net.getId();
     const tokenData = Token.networks[networkId];
     if (tokenData) {
-      const token = new web3.eth.Contract(Token.abi, tokenData.address);
-      this.setState({ token });
-      let tokenBalance = await token.methods
-        .balanceOf(this.state.account)
-        .call();
-      this.setState({ tokenBalance: tokenBalance.toString() });
+      const token = new web3.eth.Contract(Token.abi, tokenData.address)
+      this.setState({ token })
+      let tokenBalance = await token.methods.balanceOf(this.state.account).call()
+      this.setState({ tokenBalance: tokenBalance.toString() })
     } else {
       window.alert("Token contract not deployed to detected network.");
     }
@@ -100,7 +98,7 @@ class App extends Component {
         window.location.reload();
       });
     this.setState({ loading: false });
-  };
+  }
 
   sellTokens = async (tokenAmount) => {
     this.setState({ loading: true });
@@ -129,7 +127,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      account: "",
+      account: '',
       token: {},
       ethSwap: {},
       ethBalance: "0",
