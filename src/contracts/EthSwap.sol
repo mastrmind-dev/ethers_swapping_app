@@ -31,7 +31,7 @@ contract EthSwap {
             token.balanceOf(address(this)) >= tokenAmount,
             "No enough tokens"
         );
-
+ 
         token.transfer(msg.sender, tokenAmount);
 
         emit TokenPurchased(msg.sender, address(token), tokenAmount, _rate);

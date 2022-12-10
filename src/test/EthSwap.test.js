@@ -2,7 +2,7 @@ const { assert } = require("chai");
 
 const Token = artifacts.require("Token");
 const EthSwap = artifacts.require("EthSwap");
-const PayItem = artifacts.require("PayItem");
+// const PayItem = artifacts.require("PayItem");
 
 require("chai")
   .use(require("chai-as-promised"))
@@ -17,7 +17,7 @@ contract("EthSwap & PayItem Smart Contracts", (accounts) => {
   before(async () => {
     token = await Token.new();
     ethSwap = await EthSwap.new(token.address);
-    payItem = await PayItem.new(token.address);
+    // payItem = await PayItem.new(token.address);
     await token.transfer(accounts[1], tokens('1000000000000'));
   });
 
@@ -31,11 +31,11 @@ contract("EthSwap & PayItem Smart Contracts", (accounts) => {
       it('approve', async () => {
         const result = await token.approve(accounts[0], tokens('1000'), {from: accounts[1]});
       })
-      it('pay', async ()=> {
-        await payItem.payItem(tokens("1000"), {from : accounts[1]});
-        const balance = await token.balanceOf(accounts[0]);
-        assert.equal(balance.toString(), tokens('1000'));
-      })
+      // it('pay', async ()=> {
+      //   await payItem.payItem(tokens("1000"), {from : accounts[1]});
+      //   const balance = await token.balanceOf(accounts[0]);
+      //   assert.equal(balance.toString(), tokens('1000'));
+      // })
     })
   })
 
@@ -59,14 +59,15 @@ contract("EthSwap & PayItem Smart Contracts", (accounts) => {
   //   });
   // });
 
-  // describe("buyTokens()", async () => {
-  //   let result;
-  //   before(async () => {
-  //     result = await ethSwap.buyTokens({
-  //       from: accounts[1],
-  //       value: tokens("1"),
-  //     });
-  //   });
+  describe("buyTokens()", async () => {
+    let result;
+    it("buy tokens", async () => {
+      result = await ethSwap.buyTokens({
+        from: accounts[1],
+        value: tokens("1"),
+      });
+    });
+  })
 
   //   it("Purchase in ether for sap tokens", async () => {
   //     let balance = await token.balanceOf(accounts[1]);
@@ -111,5 +112,5 @@ contract("EthSwap & PayItem Smart Contracts", (accounts) => {
   //     assert.equal(event.amount.toString(), tokens("100"));
   //     assert.equal(event.rate.toString(), "100");
   //   });
-  // });
-});
+  });
+// });

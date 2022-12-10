@@ -11,7 +11,6 @@ class BuyForm extends Component {
   }
 
   render() {
-    console.log(this.props.rate);
     return (
       <div>
         <form

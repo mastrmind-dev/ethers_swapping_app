@@ -4,32 +4,32 @@ import Token from "../abis/Token.json";
 import EthSwap from "../abis/EthSwap.json";
 import Navbar from "./Navbar";
 import Main from "./Main";
-import Footer from './Footer'
+import Footer from "./Footer";
 import axios from "axios";
 
 class App extends Component {
-
   async componentWillMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
-    await this.getCryptoData(); 
+    await this.getCryptoData();
   }
 
   async getCryptoData() {
-    await axios
-      .get(
-        "https://api.nomics.com/v1/currencies/ticker?key=b71f7354281cfffaf792da74e28b1a61ae441231&ids=BTC,ETH,XRP&interval=1d,30d&convert=LKR&platform-currency=ETH&per-page=100&page=1"
-      )
-      .then((response) => {
-        this.data = response.data[0];
-        console.log(
-          "1 Eth = " +
-            this.data.price +
-            " LKR => timestamp = " +
-            this.data.price_timestamp
-        );
-      });
-    this.setState({ rate: Math.round(this.data.price) });
+    // await axios
+    //   .get(
+    //     "https://api.nomics.com/v1/currencies/ticker?key=b71f7354281cfffaf792da74e28b1a61ae441231&ids=BTC,ETH,XRP&interval=1d,30d&convert=LKR&platform-currency=ETH&per-page=100&page=1"
+    //   )
+    //   .then((response) => {
+    //     this.data = response.data[0];
+    //     console.log(
+    //       "1 Eth = " +
+    //         this.data.price +
+    //         " LKR => timestamp = " +
+    //         this.data.price_timestamp
+    //     );
+    //   });
+    // this.setState({ rate: Math.round(this.data.price) });
+    this.setState({ rate: 400000 });
   }
 
   async loadBlockchainData() {
@@ -45,10 +45,17 @@ class App extends Component {
     const networkId = await web3.eth.net.getId();
     const tokenData = Token.networks[networkId];
     if (tokenData) {
-      const token = new web3.eth.Contract(Token.abi, tokenData.address)
-      this.setState({ token })
-      let tokenBalance = await token.methods.balanceOf(this.state.account).call()
-      this.setState({ tokenBalance: tokenBalance.toString() })
+      try {
+        const token = new web3.eth.Contract(Token.abi, tokenData.address);
+        console.log("token:", token);
+        this.setState({ token });
+        let tokenBalance = await token.methods
+          .balanceOf(this.state.account)
+          .call();
+        this.setState({ tokenBalance: tokenBalance.toString() });
+      } catch (e) {
+        console.log("error:", e);
+      }
     } else {
       window.alert("Token contract not deployed to detected network.");
     }
@@ -87,38 +94,50 @@ class App extends Component {
     // console.log('intTotalFee = ' + intTotalFee);
     // let totalFee = await window.web3.utils.toBN(intTotalFee);
     // console.log('totalFee = ', totalFee);
+    let sentTime, confirmedTime;
     await this.state.ethSwap.methods
       .buyTokens(this.state.rate)
-      .send({ value: etherAmount, from: this.state.account }).on('transactionHash', (hash)=>{
-        window.alert("Your transaction was done successfully. Check your wallet to confirm you have received corresponded amount of LKRT that you requested.");
-        window.location.reload();
-      }).on('error', (error)=>{
-        console.log('error recognized');
-        window.alert('You rejected the transaction');
-        window.location.reload();
+      .send({ value: etherAmount, from: this.state.account })
+      .on("transactionHash", (hash) => {
+        const timeInstance = new Date();
+        sentTime = timeInstance.getTime();
+        console.log("Requested Time:", sentTime);
+        // window.location.reload();
+      })
+      .on("receipt", (receipt) => {
+        const timeInstance = new Date();
+        confirmedTime = timeInstance.getTime();
+        console.log("Receipt Recieved Time:", confirmedTime);
+        console.log(
+          "Time Gap(Transaction Processing Time):",
+          confirmedTime - sentTime
+        );
       });
     this.setState({ loading: false });
-  }
+  };
 
   sellTokens = async (tokenAmount) => {
     this.setState({ loading: true });
     let totalFee = tokenAmount;
     await this.state.token.methods
       .approve(window.ethSwapData.address, totalFee)
-      .send({ from: this.state.account }).on("error", (error)=>{
-        console.log('user rejected giving permission')
-        window.alert('You rejected giving permssion to send LKRT.')
+      .send({ from: this.state.account })
+      .on("error", (error) => {
+        console.log("user rejected giving permission");
+        window.alert("You rejected giving permssion to send LKRT.");
         window.location.reload();
       });
     await this.state.ethSwap.methods
       .sellTokens(totalFee, this.state.rate)
-      .send({ from: this.state.account }).on('transactionHash', (hash)=>{
-        console.log('transaction hash = ', hash);
+      .send({ from: this.state.account })
+      .on("transactionHash", (hash) => {
+        console.log("transaction hash = ", hash);
         console.log(hash);
         window.location.reload();
-      }).on('error', (error)=>{
-        console.log('user rejected the transaction');
-        window.alert('You rejected the transaction.')
+      })
+      .on("error", (error) => {
+        console.log("user rejected the transaction");
+        window.alert("You rejected the transaction.");
         window.location.reload();
       });
     this.setState({ loading: false });
@@ -127,7 +146,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      account: '',
+      account: "",
       token: {},
       ethSwap: {},
       ethBalance: "0",
@@ -175,7 +194,7 @@ class App extends Component {
             </main>
           </div>
         </div>
-        <Footer/>
+        <Footer />
       </div>
     );
   }

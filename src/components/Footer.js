@@ -6,7 +6,7 @@ const Footer = () => {
     <Card className="text-center" style={{height: "30vh"}}>
       {/* <Card.Header>Featured</Card.Header> */}
       <Card.Body className="bg-dark text-white">
-        <Card.Title>Payment Gateway</Card.Title>
+        <Card.Title>Crypto Exchange</Card.Title>
         <Card.Text>
           SL Token the digital version of Sri Lankan Rupees.
         </Card.Text>
