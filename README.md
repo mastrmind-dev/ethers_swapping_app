@@ -1,4 +1,4 @@
-# crypto_exchange_system
+# ethers_swapping_app
 Can be used to exchange Ether with your own token type. (I have used my own ERC20 token which I made for this personal project.) In development, Ganache was used to test this.
 
 # prerequisites
